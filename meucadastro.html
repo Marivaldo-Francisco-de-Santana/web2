@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+
+<title>Meu Cadastro</title>
+</head>
+
+<body>
+
+    <h2>Meu Cadastro</h2>
+
+    <div id="area"></div>
+<script>
+
+let cidadesPorEstado = {
+    "AL": ["Maceió", "Arapiraca", "Marechal Deodoro"],
+    "BA": ["Salvador", "Feira de Santana", "Porto Seguro"],
+    "PE": ["Recife", "Olinda", "Caruaru"]
+};
+
+function atualizarCidades(cidadePreSelecionada = "") {
+    let estado = document.getElementById("estado").value;
+    let cidadeSelect = document.getElementById("cidade");
+
+    cidadeSelect.innerHTML = '<option value="">Cidade</option>';
+
+    if (estado && cidadesPorEstado[estado]) {
+        cidadeSelect.disabled = false;
+
+        for (let i = 0; i < cidadesPorEstado[estado].length; i++) {
+            let c = cidadesPorEstado[estado][i];
+
+            let opt = document.createElement("option");
+            opt.value = c;
+            opt.innerHTML = c;
+
+            if (c === cidadePreSelecionada) {
+                opt.selected = true;
+            }
+
+            cidadeSelect.appendChild(opt);
+        }
+
+    } else {
+        cidadeSelect.disabled = true;
+    }
+}
+
+function enviarDados() {
+    let nome = document.getElementById("nome").value;
+    let estado = document.getElementById("estado").value;
+    let cidade = document.getElementById("cidade").value;
+
+    if (!nome || !estado || !cidade) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    document.getElementById("texto1").innerHTML = nome;
+    document.getElementById("texto2").innerHTML = cidade + ", " + estado;
+
+    document.getElementById("resultado").style.display = "block";
+}
+
+function excluirTudo() {
+    document.getElementById("texto1").innerHTML = "";
+    document.getElementById("texto2").innerHTML = "";
+    document.getElementById("resultado").style.display = "none";
+
+    document.getElementById("estado").selectedIndex = 0;
+
+    let cidade = document.getElementById("cidade");
+    cidade.innerHTML = '<option value="">Cidade</option>';
+    cidade.disabled = true;
+
+    document.getElementById("nome").value = "";
+}
+
+function editarNome() {
+    let texto = document.getElementById("texto1").innerHTML;
+    document.getElementById("nome").value = texto;
+}
+
+function editarSelects() {
+    let texto = document.getElementById("texto2").innerHTML;
+
+    if (texto) {
+        let partes = texto.split(", ");
+
+        if (partes.length === 2) {
+            let cidade = partes;
+            let estado = partes;
+
+            document.getElementById("estado").value = estado;
+            atualizarCidades(cidade);
+        }
+    }
+}
+
+</script>
+
+<select id="estado" onchange="atualizarCidades()">
+    <option value="">Estado</option>
+    <option value="AL">AL</option>
+    <option value="BA">BA</option>
+    <option value="PE">PE</option>
+</select>
+
+<select id="cidade" disabled>
+    <option value="">Cidade</option>
+</select>
+
+<input type="text" id="nome">
+<button onclick="enviarDados()">Enviar</button>
+
+<div id="resultado" style="display:none;">
+    <p id="texto1"></p>
+    <button onclick="editarNome()">Editar Nome</button>
+    <button onclick="excluirTudo()">Excluir</button>
+
+    <p id="texto2"></p>
+    <button onclick="editarSelects()">Editar Select</button>
+</div>
+
+</body>
+</html>
